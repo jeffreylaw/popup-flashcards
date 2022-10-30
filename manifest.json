@@ -1,0 +1,16 @@
+{
+    "manifest_version": 3,
+    "name": "Spontaneous Flashcards",
+    "description": "Flashcards out of the blue",
+    "version": "1.0",
+    "action": {
+        "default_popup": "popup.html"
+    },
+    "permissions": [
+        "storage",
+        "tabs"
+    ],
+    "background": {
+        "service_worker": "background.js"
+    }
+}

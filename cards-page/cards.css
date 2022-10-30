@@ -1,0 +1,15 @@
+#new-card-div {
+    /* display: none; */
+}
+
+#card-form label, input {
+    display: block;
+}
+
+.show {
+    display: block;
+}
+
+.hide {
+    display: none;
+}

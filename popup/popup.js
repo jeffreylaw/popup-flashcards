@@ -1,18 +1,72 @@
-console.log("This is a popup!");
+const cards = {};
+const initCards = getCards().then(items => {
+    Object.assign(cards, items);
+})
 
-document.addEventListener("DOMContentLoaded", function() {
-    let myCards = document.getElementById("my-cards");
-    let help = document.getElementById("help");
+window.onload = async (e) => {
+    try {
+        await initCards;
+        let randomQnA = getRandomQuestionAndAnswer();
 
-    myCards.addEventListener("click", function() {
-        chrome.tabs.create({
-            url: chrome.runtime.getURL("./cards-page/cards.html")
+        let flipBtn = document.getElementById("flip-btn");
+        let skipBtn = document.getElementById("skip-btn");
+        let myCards = document.getElementById("my-cards");
+        let help = document.getElementById("help");
+        let questionContainer = document.getElementById("question-container");
+        let answerContainer = document.getElementById("answer-container");
+        questionContainer.textContent = randomQnA[0];
+        answerContainer.textContent = randomQnA[1];
+
+        flipBtn.addEventListener("click", function() {
+            if (questionContainer.className === "show") {
+                questionContainer.className = "hide";
+                answerContainer.className = "show";
+            } else {
+                questionContainer.className = "show";
+                answerContainer.className = "hide";   
+            }
+        });
+
+        skipBtn.addEventListener("click", function() {
+            let randomQnA = getRandomQuestionAndAnswer();
+            questionContainer.textContent = randomQnA[0];
+            answerContainer.textContent = randomQnA[1];
+        });
+
+        myCards.addEventListener("click", function() {
+            chrome.tabs.create({
+                url: chrome.runtime.getURL("./cards-page/cards.html")
+            });
+        });
+    
+        help.addEventListener("click", function() {
+            chrome.tabs.create({
+                url: chrome.runtime.getURL("./help-page/help.html")
+            });
+        });
+
+        
+
+    } catch (e) {
+        console.log(e);
+    }
+}
+
+
+function getCards() {
+    return new Promise((resolve, reject) => {
+        chrome.storage.local.get(null, (items) => {
+            if (chrome.runtime.lastError) {
+                return reject(chrome.runtime.lastError);
+            }
+            resolve(items);
         });
     });
+}
 
-    help.addEventListener("click", function() {
-        chrome.tabs.create({
-            url: chrome.runtime.getURL("./help-page/help.html")
-        });
-    });
-});
+function getRandomQuestionAndAnswer() {
+    let randInt = Math.floor(Math.random() * Object.getOwnPropertyNames(cards).length);
+    let randomQuestion = Object.getOwnPropertyNames(cards)[randInt]
+    let randomAnswer = cards[randomQuestion];
+    return [randomQuestion, randomAnswer];
+}

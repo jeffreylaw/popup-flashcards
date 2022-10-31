@@ -18,6 +18,7 @@ let addCardBtn = document.getElementById("add-card-btn");
 let newCardDiv = document.getElementById("new-card-div");
 let toggleNewCardsBtn = document.getElementById("toggle-new-cards-btn");
 let saveCardsBtn = document.getElementById("save-cards-btn");
+let importCards = document.getElementById("import-cards");
 
 addCardBtn.addEventListener("click", function () {
     let questionElement = document.getElementById("question");
@@ -77,7 +78,7 @@ saveCardsBtn.addEventListener("click", function() {
             escapedAnswer = `"${cards[question]}"`
         }
 
-        csvContent += `${escapedQuestion},${escapedAnswer} \n`
+        csvContent += `${escapedQuestion},${escapedAnswer}\n`
     }
     let makeTextFile = function(contents) {
         let data = new Blob([contents], {type: "text/csv"});
@@ -99,6 +100,23 @@ saveCardsBtn.addEventListener("click", function() {
     // })
 });
 
+importCards.addEventListener("change", (event) => {
+    let file = event.target.files[0];
+    let reader = new FileReader();
+    reader.readAsText(file, "UTF-8");
+    reader.onload = function(event) {
+        let contents = event.target.result;
+        // Trim last newline if it exists
+        contents = contents.trim()
+        contents = contents.split("\n");
+        for (let i=0; i<contents.length; i++) {
+            let question = contents[i].split(",")[0];
+            let answer = contents[i].split(",")[1];
+            cards[question] = answer;
+            addCardToDOM(question, answer);
+        }
+    }
+})
 
 function getCards() {
     return new Promise((resolve, reject) => {

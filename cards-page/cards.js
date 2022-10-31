@@ -17,9 +17,7 @@ window.onload = async (e) => {
 let addCardBtn = document.getElementById("add-card-btn");
 let newCardDiv = document.getElementById("new-card-div");
 let toggleNewCardsBtn = document.getElementById("toggle-new-cards-btn");
-let cardsDiv = document.getElementById("cards-div");
-
-
+let saveCardsBtn = document.getElementById("save-cards-btn");
 
 addCardBtn.addEventListener("click", function () {
     let questionElement = document.getElementById("question");
@@ -58,6 +56,49 @@ toggleNewCardsBtn.addEventListener("click", function () {
     }
 });
 
+saveCardsBtn.addEventListener("click", function() {
+    console.log(`Downloading ${Object.keys(cards).length} cards`);
+    console.log(cards);
+    if (Object.keys(cards).length === 0) {
+        return;
+    }
+    let link = document.createElement("a");
+    let textFile = null;
+    let csvContent = "";
+    for (let question in cards) {
+        let escapedQuestion = question;
+        let escapedAnswer = cards[question];
+
+        if (question.includes(",")) {
+            escapedQuestion = `"${question}"`
+        }
+
+        if (cards[question].includes(",")) {
+            escapedAnswer = `"${cards[question]}"`
+        }
+
+        csvContent += `${escapedQuestion},${escapedAnswer} \n`
+    }
+    let makeTextFile = function(contents) {
+        let data = new Blob([contents], {type: "text/csv"});
+
+        if (textFile !== null) {
+            window.URL.revokeObjectURL(textFile);
+        }
+
+        textFile = window.URL.createObjectURL(data);
+        // URL for href
+        return textFile;
+    }
+    link.setAttribute("download", "cards.txt");
+    link.href = makeTextFile(csvContent);
+    link.click();
+    // window.requestAnimationFrame(function () {
+    //     let event = new MouseEvent("click");
+    //     link.dispatchEvent(event);
+    // })
+});
+
 
 function getCards() {
     return new Promise((resolve, reject) => {
@@ -86,6 +127,7 @@ function addCardToDOM(question, answer) {
         cardParagraphElement.remove();
         chrome.storage.local.remove(question, function(result) {
             console.log(`Question: "${question}" removed`);
+            delete cards[question];
         });
     });
 }

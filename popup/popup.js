@@ -51,6 +51,19 @@ window.onload = async (e) => {
                 url: chrome.runtime.getURL("help-page/help.html")
             });
         });
+
+        disableBtn.addEventListener("click", function() {
+            chrome.storage.local.set({enabled: false}, function(result){
+                console.log(result);
+            });
+        });
+
+        enableBtn.addEventListener("click", function() {
+            chrome.storage.local.set({enabled: false}, function(result){
+                console.log(result);
+            });
+        });
+
     } catch (e) {
         console.log(e);
     }

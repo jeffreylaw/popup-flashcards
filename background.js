@@ -1,7 +1,10 @@
 console.log("background");
-// chrome.storage.local.get(null, function(result) {
-//     console.log(result);
-// })
+chrome.storage.local.set({enabled: false}, function() {
+    console.log("Extension enabled: false");
+    chrome.storage.local.get(null, function(result) {
+        console.log(result);
+    });
+});
 
 chrome.alarms.create("demo", {periodInMinutes: 1})
 chrome.alarms.onAlarm.addListener(async () => {

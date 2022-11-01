@@ -16,7 +16,7 @@ chrome.alarms.onAlarm.addListener(async () => {
         chrome.scripting.insertCSS({
             target: {tabId: tabId},
             files: ["./injected-card/card.css"]
-        }, (r) => {console.log(r)});
+        });
         chrome.scripting.executeScript({
             target: {tabId: tabId},
             files: ["./injected-card/card.js"]
@@ -28,8 +28,8 @@ async function getCurrentTab() {
     let queryOptions = { active: true, lastFocusedWindow: true };
     // `tab` will either be a `tabs.Tab` instance or `undefined`.
     let [tab] = await chrome.tabs.query(queryOptions);
-    console.log(tab);
-    if (tab === null) {
+    console.log(`Getting current tab: ${JSON.stringify(tab)}`);
+    if (tab == null) {
         return null;
     }
     return tab.id;

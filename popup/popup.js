@@ -17,7 +17,7 @@ window.onload = async (e) => {
         let questionContainer = document.getElementById("question-container");
         let answerContainer = document.getElementById("answer-container");
 
-        enableBtn.className = "hide";
+        disableBtn.className = "hide";
 
         questionContainer.textContent = randomQnA[0];
         answerContainer.textContent = randomQnA[1];
@@ -53,22 +53,21 @@ window.onload = async (e) => {
         });
 
         disableBtn.addEventListener("click", function() {
-            chrome.storage.local.set({enabled: false}, function(result){
-                console.log(result);
-            });
+            chrome.storage.local.set({enabled: false});
+            disableBtn.className = "hide";
+            enableBtn.className = "";
         });
 
         enableBtn.addEventListener("click", function() {
-            chrome.storage.local.set({enabled: false}, function(result){
-                console.log(result);
-            });
+            chrome.storage.local.set({enabled: false});
+            disableBtn.className = "";
+            enableBtn.className = "hide";
         });
 
     } catch (e) {
         console.log(e);
     }
 }
-
 
 function getCards() {
     return new Promise((resolve, reject) => {

@@ -114,6 +114,9 @@ importCards.addEventListener("change", (event) => {
             let answer = contents[i].split(",")[1];
             cards[question] = answer;
             addCardToDOM(question, answer);
+            chrome.storage.local.set({ [question]: answer }, function () {
+                console.log(`Added ${question}: ${answer}`);
+            })
         }
     }
 })

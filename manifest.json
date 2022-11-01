@@ -4,11 +4,17 @@
     "description": "Flashcards out of the blue",
     "version": "1.0",
     "action": {
-        "default_popup": "popup.html"
+        "default_popup": "./popup/popup.html"
     },
     "permissions": [
         "storage",
-        "tabs"
+        "tabs",
+        "alarms",
+        "scripting"
+    ],
+    "host_permissions": [
+        "http://*/*",
+        "https://*/*"
     ],
     "background": {
         "service_worker": "background.js"

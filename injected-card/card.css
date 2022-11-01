@@ -1,0 +1,29 @@
+#card-div {
+    top: 50%;
+    position: fixed;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 99999;
+    background-color: #eaeaea;
+    text-align: center;
+    cursor: pointer;
+    box-shadow: 1px 3px 5px rgba(0, 0, 0, 0.4)
+}
+
+#card-div p {
+    padding: 100px 200px;
+}
+
+#close-btn {
+    position: absolute;
+    top: 0;
+    right: 0;
+}
+
+.show {
+    display: block;
+}
+
+.hide {
+    display: none;
+}

@@ -42,10 +42,19 @@ if (!window.INJECTED_FLAG) {
 
     function intervalFunction() {
         if (cardDiv.className === "hide") {
-            chrome.storage.local.get(null, function(result) {
-                console.log(result);
-                if (result["EXTENSION_SETTING_ENABLED_" + chrome.runtime.id]) {
-                    let randomQnA = getRandomQuestionAndAnswer(result);
+            chrome.storage.local.get(null, function(items) {
+                console.log(items);
+
+                let cards = Object.keys(items)
+                .filter(prop => prop !== "EXTENSION_SETTING_ENABLED_" + chrome.runtime.id)
+                .reduce((obj, key) => {
+                    return Object.assign(obj, {
+                        [key]: items[key]
+                    });
+                }, {});
+        
+                if (items["EXTENSION_SETTING_ENABLED_" + chrome.runtime.id]) {
+                    let randomQnA = getRandomQuestionAndAnswer(cards);
                     questionContainer.textContent = randomQnA[0];
                     answerContainer.textContent = randomQnA[1];
                     showCardDiv();

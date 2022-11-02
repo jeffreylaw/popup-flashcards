@@ -8,7 +8,7 @@ window.onload = async (e) => {
         await initCards;
         let randomQnA = getRandomQuestionAndAnswer(cards);
 
-        let flipBtn = document.getElementById("flip-btn");
+        let cardDiv = document.getElementById("card-div");
         let skipBtn = document.getElementById("skip-btn");
         let disableBtn = document.getElementById("disable-btn");
         let enableBtn = document.getElementById("enable-btn");
@@ -27,17 +27,16 @@ window.onload = async (e) => {
             }
         });
 
-
         questionContainer.textContent = randomQnA[0];
         answerContainer.textContent = randomQnA[1];
 
-        flipBtn.addEventListener("click", function() {
-            if (questionContainer.className === "show") {
+        cardDiv.addEventListener("click", function() {
+            if (questionContainer.className === "") {
                 questionContainer.className = "hide";
-                answerContainer.className = "show";
+                answerContainer.className = "";
             } else {
-                questionContainer.className = "show";
-                answerContainer.className = "hide";   
+                questionContainer.className = "";
+                answerContainer.className = "hide";
             }
         });
 
@@ -45,7 +44,7 @@ window.onload = async (e) => {
             let randomQnA = getRandomQuestionAndAnswer(cards);
             questionContainer.textContent = randomQnA[0];
             answerContainer.textContent = randomQnA[1];
-            questionContainer.className = "show";
+            questionContainer.className = "";
             answerContainer.className = "hide";   
         });
 
@@ -63,27 +62,26 @@ window.onload = async (e) => {
 
         disableBtn.addEventListener("click", function() {
             chrome.storage.local.set({enabled: false});
-            disableBtn.className = "hide";
-            enableBtn.className = "";
+            toggleEnableBtn();
         });
 
         enableBtn.addEventListener("click", function() {
             chrome.storage.local.set({enabled: true});
-            disableBtn.className = "";
-            enableBtn.className = "hide";
-
-            chrome.tabs.query({}, function(tabs) {
-                console.log(tabs);
-                for (let i=0; i<tabs.length; i++) {
-                    chrome.tabs.sendMessage(tabs[i].id, {greeting: "Hello"}, function(response) {
-                        console.log(response.farewell);
-                    })
-                }
-            });
+            toggleEnableBtn();
         });
 
     } catch (e) {
         console.log(e);
+    }
+}
+
+function toggleEnableBtn() {
+    if (enableBtn.className === "") {
+        disableBtn.className = "";
+        enableBtn.className = "hide";
+    } else {
+        disableBtn.className = "hide";
+        enableBtn.className = "";
     }
 }
 

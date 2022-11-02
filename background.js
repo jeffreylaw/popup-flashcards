@@ -24,7 +24,12 @@ chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
     As service workers are created/destroyed over the lifetime, check if the key "enabled" exists rather than immediately setting enabled: false (which would reset enabled whenever the service worker is "restarted")
 */
 chrome.storage.local.get(null, function(result) {
-    if (!Object.hasOwn(result, "enabled")) {
-        chrome.storage.local.set({enabled: false});
+    let extSettingProp = "EXTENSION_SETTING_ENABLED_" + chrome.runtime.id;
+    let propObject = {
+        [extSettingProp]: false
+    };
+    
+    if (!Object.hasOwn(result, extSettingProp)) {
+        chrome.storage.local.set(propObject);
     }
 });

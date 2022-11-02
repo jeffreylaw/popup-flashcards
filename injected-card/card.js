@@ -44,7 +44,7 @@ if (!window.INJECTED_FLAG) {
         if (cardDiv.className === "hide") {
             chrome.storage.local.get(null, function(result) {
                 console.log(result);
-                if (result.enabled) {
+                if (result["EXTENSION_SETTING_ENABLED_" + chrome.runtime.id]) {
                     let randomQnA = getRandomQuestionAndAnswer(result);
                     questionContainer.textContent = randomQnA[0];
                     answerContainer.textContent = randomQnA[1];

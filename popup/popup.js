@@ -1,5 +1,12 @@
 chrome.storage.local.get(null, (items) => {
-    let cards = items;
+    let cards = Object.keys(items)
+        .filter(prop => prop !== "EXTENSION_SETTING_ENABLED_" + chrome.runtime.id)
+        .reduce((obj, key) => {
+            return Object.assign(obj, {
+                [key]: items[key]
+            });
+        }, {});
+
     let cardDiv = document.getElementById("card-div");
     let skipBtn = document.getElementById("skip-btn");
     let disableBtn = document.getElementById("disable-btn");
@@ -8,9 +15,9 @@ chrome.storage.local.get(null, (items) => {
     let help = document.getElementById("help");
     let questionContainer = document.getElementById("question-container");
     let answerContainer = document.getElementById("answer-container");
-    
 
-    if (cards.enabled) {
+
+    if (items["EXTENSION_SETTING_ENABLED" + chrome.runtime.id]) {
         disableBtn.className = "";
         enableBtn.className = "hide";
     } else {
@@ -19,8 +26,8 @@ chrome.storage.local.get(null, (items) => {
     }
 
     showNewCard(cards);
-    
-    cardDiv.addEventListener("click", function() {
+
+    cardDiv.addEventListener("click", function () {
         if (questionContainer.className === "") {
             questionContainer.className = "hide";
             answerContainer.className = "";
@@ -29,49 +36,57 @@ chrome.storage.local.get(null, (items) => {
             answerContainer.className = "hide";
         }
     });
-    
-    skipBtn.addEventListener("click", function() {
+
+    skipBtn.addEventListener("click", function () {
         showNewCard();
     });
-    
-    myCards.addEventListener("click", function() {
+
+    myCards.addEventListener("click", function () {
         chrome.tabs.create({
             url: chrome.runtime.getURL("cards-page/cards.html")
         });
     });
-    
-    help.addEventListener("click", function() {
+
+    help.addEventListener("click", function () {
         chrome.tabs.create({
             url: chrome.runtime.getURL("help-page/help.html")
         });
     });
-    
-    enableBtn.addEventListener("click", function() {
-        chrome.storage.local.set({enabled: true});
+
+    enableBtn.addEventListener("click", function () {
+        let extSettingProp = "EXTENSION_SETTING_ENABLED_" + chrome.runtime.id;
+        let propObject = {
+            [extSettingProp]: true
+        };
+        chrome.storage.local.set(propObject);
         setEnableDisableBtn("enable");
     });
 
-    disableBtn.addEventListener("click", function() {
-        chrome.storage.local.set({enabled: false});
+    disableBtn.addEventListener("click", function () {
+        let extSettingProp = "EXTENSION_SETTING_ENABLED_" + chrome.runtime.id;
+        let propObject = {
+            [extSettingProp]: false
+        };
+        chrome.storage.local.set(propObject);
         setEnableDisableBtn("disable");
     });
-    
+
     function setEnableDisableBtn(status) {
         if (status === "enable") {
-            enableBtn.className = "hide"; 
+            enableBtn.className = "hide";
             disableBtn.className = "";
-        } else {
-            enableBtn.className = ""; 
-            disableBtn.className = "hide";   
+        } else if (status === "disable") {
+            enableBtn.className = "";
+            disableBtn.className = "hide";
         }
-    }    
+    }
 
     function showNewCard() {
         let randomQnA = getRandomQuestionAndAnswer(cards);
         questionContainer.textContent = randomQnA[0];
         answerContainer.textContent = randomQnA[1];
         questionContainer.className = "";
-        answerContainer.className = "hide";   
+        answerContainer.className = "hide";
     }
 });
 

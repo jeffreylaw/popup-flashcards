@@ -17,7 +17,7 @@ chrome.storage.local.get(null, (items) => {
     let answerContainer = document.getElementById("answer-container");
 
 
-    if (items["EXTENSION_SETTING_ENABLED" + chrome.runtime.id]) {
+    if (items["EXTENSION_SETTING_ENABLED_" + chrome.runtime.id]) {
         disableBtn.className = "";
         enableBtn.className = "hide";
     } else {
@@ -58,6 +58,16 @@ chrome.storage.local.get(null, (items) => {
         let propObject = {
             [extSettingProp]: true
         };
+        chrome.tabs.query({}, function(tabs) {
+            for (let i=0; i<tabs.length; i++) {
+                console.log(tabs[i])
+                if (!tabs[i].url.startsWith("http") || !tabs[i].url.startsWith("https")) {
+                    continue;
+                }
+                chrome.tabs.sendMessage(tabs[i].id, propObject);
+            }
+          });
+
         chrome.storage.local.set(propObject);
         setEnableDisableBtn("enable");
     });
@@ -67,6 +77,15 @@ chrome.storage.local.get(null, (items) => {
         let propObject = {
             [extSettingProp]: false
         };
+        chrome.tabs.query({}, function(tabs) {
+            for (let i=0; i<tabs.length; i++) {
+                console.log(tabs[i])
+                if (!tabs[i].url.startsWith("http") || !tabs[i].url.startsWith("https")) {
+                    continue;
+                }
+                chrome.tabs.sendMessage(tabs[i].id, propObject);
+            }
+          });
         chrome.storage.local.set(propObject);
         setEnableDisableBtn("disable");
     });

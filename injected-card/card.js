@@ -1,19 +1,30 @@
 console.log("Injecting content script: card.js")
 if (!window.INJECTED_FLAG) {
-    console.log("Modifying DOM");
     let interval = null;
+    chrome.runtime.onMessage.addListener(
+        function (request, sender, sendResponse) {
+            let extSettingProp = "EXTENSION_SETTING_ENABLED_" + chrome.runtime.id;
+            if (extSettingProp) {
+                clearInterval(interval);
+                interval = setInterval(intervalFunction, frequency);
+            } else {
+                clearInterval(interval);
+            }
+        }
+    );
+    console.log("Modifying DOM");
     let frequency = 5000;
     let cardDiv = document.createElement("div");
     cardDiv.id = ("card-div");
     cardDiv.className = "hide";
-    
+
     let questionContainer = document.createElement("p")
     let answerContainer = document.createElement("p");
 
     let closeBtn = document.createElement("button");
     closeBtn.id = "close-btn";
     closeBtn.textContent = "X"
-    
+
     document.body.appendChild(cardDiv);
     cardDiv.appendChild(questionContainer);
     cardDiv.appendChild(answerContainer);
@@ -23,15 +34,15 @@ if (!window.INJECTED_FLAG) {
 
     window.INJECTED_FLAG = true;
 
-    questionContainer.addEventListener("click", function() {
+    questionContainer.addEventListener("click", function () {
         flipCard();
     });
 
-    answerContainer.addEventListener("click", function() {
+    answerContainer.addEventListener("click", function () {
         flipCard();
     });
 
-    closeBtn.addEventListener("click", function() {
+    closeBtn.addEventListener("click", function () {
         cardDiv.className = "hide";
 
         if (interval !== null) {
@@ -42,17 +53,17 @@ if (!window.INJECTED_FLAG) {
 
     function intervalFunction() {
         if (cardDiv.className === "hide") {
-            chrome.storage.local.get(null, function(items) {
+            chrome.storage.local.get(null, function (items) {
                 console.log(items);
 
                 let cards = Object.keys(items)
-                .filter(prop => prop !== "EXTENSION_SETTING_ENABLED_" + chrome.runtime.id)
-                .reduce((obj, key) => {
-                    return Object.assign(obj, {
-                        [key]: items[key]
-                    });
-                }, {});
-        
+                    .filter(prop => prop !== "EXTENSION_SETTING_ENABLED_" + chrome.runtime.id)
+                    .reduce((obj, key) => {
+                        return Object.assign(obj, {
+                            [key]: items[key]
+                        });
+                    }, {});
+
                 if (items["EXTENSION_SETTING_ENABLED_" + chrome.runtime.id]) {
                     let randomQnA = getRandomQuestionAndAnswer(cards);
                     questionContainer.textContent = randomQnA[0];

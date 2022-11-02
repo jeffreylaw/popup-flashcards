@@ -1,12 +1,21 @@
+chrome.runtime.onMessage.addListener(
+    function(request, sender, sendResponse) {
+      console.log(sender.tab ?
+                  "from a content script:" + sender.tab.url :
+                  "from the extension");
+      if (request.greeting === "hello")
+        sendResponse({farewell: "goodbye"});
+    }
+  );
+
 console.log("Running card.js")
 if (!window.INJECTED_FLAG) {
-    window.INJECTED_FLAG = true;
-    let cards = {};
     let interval = null;
     let frequency = 5000;
     console.log("Modifying DOM");
     let cardDiv = document.createElement("div");
     cardDiv.id = ("card-div");
+    cardDiv.className = "hide";
     
     let questionContainer = document.createElement("p")
     let answerContainer = document.createElement("p");
@@ -21,17 +30,9 @@ if (!window.INJECTED_FLAG) {
     cardDiv.appendChild(answerContainer);
     cardDiv.appendChild(closeBtn);
 
+    interval = setInterval(intervalFunction, frequency);
 
-    chrome.storage.local.get(null, function(result) {
-        cards = result;
-        console.log(cards)
-        
-        let randomQnA = getRandomQuestionAndAnswer(cards);
-        questionContainer.textContent = randomQnA[0];
-        answerContainer.textContent = randomQnA[1];
-    });
-    
-
+    window.INJECTED_FLAG = true;
 
     questionContainer.addEventListener("click", function() {
         questionContainer.className = "hide";
@@ -57,10 +58,10 @@ if (!window.INJECTED_FLAG) {
         if (cardDiv.className !== "hide") {
             return;
         }
-        chrome.storage.local.get(['enabled'], function(result) {
+        chrome.storage.local.get(null, function(result) {
             console.log(result);
             if (result.enabled) {
-                let randomQnA = getRandomQuestionAndAnswer(cards);
+                let randomQnA = getRandomQuestionAndAnswer(result);
                 questionContainer.textContent = randomQnA[0];
                 answerContainer.textContent = randomQnA[1];
                 cardDiv.className = "";

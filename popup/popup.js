@@ -71,6 +71,15 @@ window.onload = async (e) => {
             chrome.storage.local.set({enabled: true});
             disableBtn.className = "";
             enableBtn.className = "hide";
+
+            chrome.tabs.query({}, function(tabs) {
+                console.log(tabs);
+                for (let i=0; i<tabs.length; i++) {
+                    chrome.tabs.sendMessage(tabs[i].id, {greeting: "Hello"}, function(response) {
+                        console.log(response.farewell);
+                    })
+                }
+            });
         });
 
     } catch (e) {

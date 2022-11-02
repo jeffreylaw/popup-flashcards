@@ -5,6 +5,7 @@ if (!window.INJECTED_FLAG) {
     let frequency = 5000;
     let cardDiv = document.createElement("div");
     cardDiv.id = ("card-div");
+    cardDiv.className = "hide";
     
     let questionContainer = document.createElement("p")
     let answerContainer = document.createElement("p");

@@ -1,7 +1,11 @@
 console.log("background");
 
 chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
-    if (!tab || !tab.url.startsWith("http://") || !tab.url.startsWith("https://") || changeInfo.status !== "complete") {
+    if (!tab || changeInfo.status !== "complete") {
+        return;
+    }
+
+    if (!tab.url.startsWith("http") || !tab.url.startsWith("https")) {
         return;
     }
     console.log(`Inserting CSS and executing script on ${tabId}, ${tab.url}`);

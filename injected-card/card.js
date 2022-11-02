@@ -1,6 +1,8 @@
 console.log("Running card.js")
 if (!window.INJECTED_FLAG) {
+    window.INJECTED_FLAG = true;
     let cards = {};
+    let interval = null;
     let frequency = 5000;
     console.log("Modifying DOM");
     let cardDiv = document.createElement("div");
@@ -27,8 +29,6 @@ if (!window.INJECTED_FLAG) {
         let randomQnA = getRandomQuestionAndAnswer(cards);
         questionContainer.textContent = randomQnA[0];
         answerContainer.textContent = randomQnA[1];
-    
-        window.INJECTED_FLAG = true;
     });
     
 
@@ -45,21 +45,37 @@ if (!window.INJECTED_FLAG) {
 
     closeBtn.addEventListener("click", function() {
         cardDiv.className = "hide";
-        setTimeout(function() {
-            let randomQnA = getRandomQuestionAndAnswer(cards);
-            questionContainer.textContent = randomQnA[0];
-            answerContainer.textContent = randomQnA[1];
-            cardDiv.className = "";
-            questionContainer.className = "";
-            answerContainer.className = "hide";
-        }, frequency);
+
+        if (interval !== null) {
+            clearInterval(interval);
+        }
+        interval = setInterval(intervalFunction, frequency);
     });
+
+    function intervalFunction() {
+        // If the cardDiv is already showing, don't continue
+        if (cardDiv.className !== "hide") {
+            return;
+        }
+        chrome.storage.local.get(['enabled'], function(result) {
+            console.log(result);
+            if (result.enabled) {
+                let randomQnA = getRandomQuestionAndAnswer(cards);
+                questionContainer.textContent = randomQnA[0];
+                answerContainer.textContent = randomQnA[1];
+                cardDiv.className = "";
+                questionContainer.className = "";
+                answerContainer.className = "hide";
+            }
+        });
+    }
+
+    function getRandomQuestionAndAnswer(cards) {
+        let randInt = Math.floor(Math.random() * Object.getOwnPropertyNames(cards).length);
+        let randomQuestion = Object.getOwnPropertyNames(cards)[randInt]
+        let randomAnswer = cards[randomQuestion];
+        return [randomQuestion, randomAnswer];
+    }
 }
 
 
-function getRandomQuestionAndAnswer(cards) {
-    let randInt = Math.floor(Math.random() * Object.getOwnPropertyNames(cards).length);
-    let randomQuestion = Object.getOwnPropertyNames(cards)[randInt]
-    let randomAnswer = cards[randomQuestion];
-    return [randomQuestion, randomAnswer];
-}

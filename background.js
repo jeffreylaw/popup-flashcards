@@ -1,12 +1,5 @@
 console.log("background");
-chrome.storage.local.set({enabled: false}, function() {
-    console.log("Extension enabled: false");
-    chrome.storage.local.get(null, function(result) {
-        console.log(result);
-    });
-});
-
-chrome.alarms.create("demo", {periodInMinutes: 1})
+chrome.alarms.create("alarm", {periodInMinutes: 1})
 chrome.alarms.onAlarm.addListener(async () => {
     let date = new Date();
     console.log("Alarm triggered " + date.toLocaleTimeString());
@@ -21,6 +14,16 @@ chrome.alarms.onAlarm.addListener(async () => {
             target: {tabId: tabId},
             files: ["./injected-card/card.js"]
         });            
+    }
+});
+
+
+/*
+    As service workers are created/destroyed over the lifetime, check if the key "enabled" exists rather than immediately setting enabled: false (which would reset enabled whenever the service worker is "restarted")
+*/
+chrome.storage.local.get(null, function(result) {
+    if (!Object.hasOwn(result, "enabled")) {
+        chrome.storage.local.set({enabled: false});
     }
 });
 

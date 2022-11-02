@@ -17,7 +17,16 @@ window.onload = async (e) => {
         let questionContainer = document.getElementById("question-container");
         let answerContainer = document.getElementById("answer-container");
 
-        disableBtn.className = "hide";
+        chrome.storage.local.get(["enabled"], function(result) {
+            if (result.enabled) {
+                disableBtn.className = "";
+                enableBtn.className = "hide";
+            } else {
+                disableBtn.className = "hide";
+                enableBtn.className = "";
+            }
+        });
+
 
         questionContainer.textContent = randomQnA[0];
         answerContainer.textContent = randomQnA[1];
@@ -59,7 +68,7 @@ window.onload = async (e) => {
         });
 
         enableBtn.addEventListener("click", function() {
-            chrome.storage.local.set({enabled: false});
+            chrome.storage.local.set({enabled: true});
             disableBtn.className = "";
             enableBtn.className = "hide";
         });

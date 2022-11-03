@@ -1,7 +1,7 @@
 console.log("Cards page");
 chrome.storage.local.get(null, (items) => {
     let cards = Object.keys(items)
-        .filter(prop => !prop.startsWith("EXTENSION_SETTING"))
+        .filter(prop => !prop.startsWith("EXTENSION_SETTING") && !prop.endsWith(chrome.runtime.id))
         .reduce((obj, key) => {
             return Object.assign(obj, {
                 [key]: items[key]

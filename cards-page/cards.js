@@ -1,7 +1,7 @@
 console.log("Cards page");
 chrome.storage.local.get(null, (items) => {
     let cards = Object.keys(items)
-        .filter(prop => prop !== "EXTENSION_SETTING_ENABLED_" + chrome.runtime.id)
+        .filter(prop => !prop.startsWith("EXTENSION_SETTING"))
         .reduce((obj, key) => {
             return Object.assign(obj, {
                 [key]: items[key]
@@ -98,7 +98,6 @@ chrome.storage.local.get(null, (items) => {
         reader.readAsText(file, "UTF-8");
         reader.onload = function (event) {
             let contents = event.target.result;
-            // Trim last newline if it exists
             contents = contents.trim()
             contents = contents.split("\n");
             for (let i = 0; i < contents.length; i++) {

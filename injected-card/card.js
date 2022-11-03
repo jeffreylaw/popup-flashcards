@@ -1,19 +1,22 @@
 console.log("Injecting content script: card.js")
+
+
 if (!window.INJECTED_FLAG) {
-    let interval = null;
     chrome.runtime.onMessage.addListener(
         function (request, sender, sendResponse) {
-            let extSettingProp = "EXTENSION_SETTING_ENABLED_" + chrome.runtime.id;
-            if (extSettingProp) {
-                clearInterval(interval);
-                interval = setInterval(intervalFunction, frequency);
-            } else {
-                clearInterval(interval);
+            console.log(request);
+            console.log(new Date().toLocaleString());
+            if (request.message === "popup" && request.cards && cardDiv.className !== "") {
+                let randomQnA = getRandomQuestionAndAnswer(request.cards)
+                questionContainer.textContent = randomQnA[0];
+                answerContainer.textContent = randomQnA[1]
+                showCardDiv();
             }
         }
     );
-    console.log("Modifying DOM");
-    let frequency = 5000;
+
+    window.INJECTED_FLAG = true;
+
     let cardDiv = document.createElement("div");
     cardDiv.id = ("card-div");
     cardDiv.className = "hide";
@@ -30,64 +33,32 @@ if (!window.INJECTED_FLAG) {
     cardDiv.appendChild(answerContainer);
     cardDiv.appendChild(closeBtn);
 
-    interval = setInterval(intervalFunction, frequency);
-
-    window.INJECTED_FLAG = true;
-
     questionContainer.addEventListener("click", function () {
-        flipCard();
+        setCardOrientation("back");
     });
 
     answerContainer.addEventListener("click", function () {
-        flipCard();
+        setCardOrientation("front");
     });
 
     closeBtn.addEventListener("click", function () {
         cardDiv.className = "hide";
-
-        if (interval !== null) {
-            clearInterval(interval);
-        }
-        interval = setInterval(intervalFunction, frequency);
     });
 
-    function intervalFunction() {
-        if (cardDiv.className === "hide") {
-            chrome.storage.local.get(null, function (items) {
-                console.log(items);
 
-                let cards = Object.keys(items)
-                    .filter(prop => prop !== "EXTENSION_SETTING_ENABLED_" + chrome.runtime.id)
-                    .reduce((obj, key) => {
-                        return Object.assign(obj, {
-                            [key]: items[key]
-                        });
-                    }, {});
-
-                if (items["EXTENSION_SETTING_ENABLED_" + chrome.runtime.id]) {
-                    let randomQnA = getRandomQuestionAndAnswer(cards);
-                    questionContainer.textContent = randomQnA[0];
-                    answerContainer.textContent = randomQnA[1];
-                    showCardDiv();
-                }
-            });
-        }
-    }
-
-    function flipCard() {
-        if (questionContainer.className === "") {
-            questionContainer.className = "hide";
-            answerContainer.className = "";
-        } else {
+    function setCardOrientation(orientation) {
+        if (orientation === "front") {
             questionContainer.className = "";
             answerContainer.className = "hide";
+        } else if (orientation === "back") {
+            questionContainer.className = "hide";
+            answerContainer.className = "";
         }
     }
 
     function showCardDiv() {
         cardDiv.className = "";
-        questionContainer.className = "";
-        answerContainer.className = "hide";
+        setCardOrientation("front");
     }
 
     function getRandomQuestionAndAnswer(cards) {
@@ -97,5 +68,4 @@ if (!window.INJECTED_FLAG) {
         return [randomQuestion, randomAnswer];
     }
 }
-
 

@@ -57,13 +57,14 @@ chrome.storage.local.get(null, (items) => {
     });
 
     enableBtn.addEventListener("click", function () {
-        let extSettingProp = "EXTENSION_SETTING_ENABLED_" + chrome.runtime.id;
+        let extSettingEnabledProp = "EXTENSION_SETTING_ENABLED_" + chrome.runtime.id;
+        let extSettingFrequencyProp = "EXTENSION_SETTING_FREQUENCY_" + chrome.runtime.id;
         let propObject = {
-            [extSettingProp]: true
+            [extSettingEnabledProp]: true,
+            [extSettingFrequencyProp]: frequencyInput.value
         };
         chrome.tabs.query({}, function (tabs) {
             for (let i = 0; i < tabs.length; i++) {
-                console.log(tabs[i])
                 if (!tabs[i].url.startsWith("http") || !tabs[i].url.startsWith("https")) {
                     continue;
                 }
@@ -82,7 +83,6 @@ chrome.storage.local.get(null, (items) => {
         };
         chrome.tabs.query({}, function (tabs) {
             for (let i = 0; i < tabs.length; i++) {
-                console.log(tabs[i])
                 if (!tabs[i].url.startsWith("http") || !tabs[i].url.startsWith("https")) {
                     continue;
                 }
@@ -123,7 +123,6 @@ chrome.storage.local.get(null, (items) => {
                 randomQnA = getRandomQuestionAndAnswer(cards);
             }
         }
-        console.log(randomQnA);
         questionContainer.textContent = randomQnA[0];
         answerContainer.textContent = randomQnA[1];
     }

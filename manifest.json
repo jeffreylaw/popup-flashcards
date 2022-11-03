@@ -19,5 +19,14 @@
     ],
     "background": {
         "service_worker": "background.js"
-    }
+    },
+    "content_scripts": [
+        {
+            "matches": ["<all_urls>"],
+            "js": ["injected-card/card.js"],
+            "run_at": "document_end",
+            "css": ["injected-card/card.css"]
+        }
+    ]
+
 }

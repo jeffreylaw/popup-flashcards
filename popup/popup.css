@@ -1,20 +1,138 @@
 body {
-    width: 20rem;
+  height: 200px;
+  width: 400px;
+  margin: 0px;
+  padding: 0px;
+  display: flex;
+  flex-direction: column;
+  background: #fdfdfd;
+  color: #0E101A;
+  font-family: sans-serif;
+}
+
+p {
+  padding: 0px;
+  margin: 0px;
+}
+
+#card-section {
+  height: 65%;
+  font-weight: 700;
 }
 
 #card-div { 
-  border: 2px solid black;
+  height: 100%;
+  width: 100%;
   cursor: pointer;
+  perspective: 1000px;
 }
 
-.show {
-  display: block;
+#card-div-inner {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  transform-style: preserve-3d;
+  transition: all 0.5s;
+}
+
+#card-div-inner.is-flipped {
+  transform: rotateY(180deg);
+}
+
+#question-container, #answer-container {
+  font-size: 1.5em;
+  position: absolute;
+  backface-visibility: hidden;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #fafafa;
+}
+
+#answer-container {
+  transform: rotateY(180deg);
+}
+
+#button-section {
+  height: 20%;
+  display: flex;
+  justify-content: space-around;
+  gap: 1px;
+}
+
+#button-section a {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 1.2em;
+  background-color: #11A683;
+  color:#fdfdfd;
+  flex: 1;
+}
+
+#button-section a:hover {
+  cursor: pointer;
+  background-color: #13b690;
+}
+
+#button-section #enable-btn {
+  background-color: grey;
+}
+
+#slider-section {
+  height: 15%;
+  display: flex;
+  justify-content: space-between;
+  background-color: #fdfdfd;
+}
+
+#slider-section a {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex: 1;
+  font-size: 1.2em;
+}
+
+#slider-section #frequency-slider {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex: 2;
 }
 
 .hide {
-  display: none;
+  display: none !important;
 }
-  
-p {
-  text-align: center;
+
+#next-btn:before {
+  content: '';
+  background: url("images/next-icon.svg") no-repeat;
+  height: 20px;
+  width: 20px;
 }
+
+#cards-btn:before {
+  content: '';
+  background: url("images/cards.svg") no-repeat;
+  height: 20px;
+  width: 20px;
+}
+
+#enable-btn:before {
+  content: '';
+  background: url("images/on-icon.svg") no-repeat;
+  height: 20px;
+  width: 20px;
+}
+
+#disable-btn:before {
+  content: '';
+  background: url("images/off-icon.svg") no-repeat;
+  height: 20px;
+  width: 20px;
+}
+

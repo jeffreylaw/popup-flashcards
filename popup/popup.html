@@ -9,17 +9,27 @@
 </head>
 
 <body>
-    <h1>Spontaneous Flashcards</h1>
-    <div id="card-div">
-        <p id="question-container"></p>
-        <p id="answer-container"></p>
+    <div id="card-section">
+        <div id="card-div">
+            <div id="card-div-inner">
+                <p id="question-container"></p>
+                <p id="answer-container"></p>
+            </div>
+        </div>
     </div>
-    <button id="skip-btn">Skip</button>
-    <button id="disable-btn">Disable</button>
-    <button id="enable-btn">Enable</button>
-    <br />
-    <a id="my-cards">My Cards</a>
-    <a id="help">Help</a>
+    <div id="button-section">
+        <a id="next-btn" title="Show next card"></a>
+        <a id="cards-btn" title="My cards"></a>
+        <a id="disable-btn" title="Disable spontaneous popups"></a>
+        <a id="enable-btn" title="Enable spontaneous popups"></a>
+    </div>
+    <div id="slider-section">
+        <span id="frequency-slider">
+            <input id="frequency-slider-input" type="range" min="1" max="30">
+            <span id="frequency-value-display"></span>
+        </span>
+        <a id="help-btn">Help</a>
+    </div>
     <script src="popup.js"></script>
 </body>
 

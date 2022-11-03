@@ -136,3 +136,6 @@ p {
   width: 20px;
 }
 
+.grey-text {
+  color: rgb(124, 124, 124);
+}

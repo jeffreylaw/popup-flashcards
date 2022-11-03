@@ -19,18 +19,18 @@ chrome.storage.local.get(null, (items) => {
     let helpBtn = document.getElementById("help-btn");
     let extFrequencyProp = "EXTENSION_SETTING_FREQUENCY_" + chrome.runtime.id;
 
-    if (items.extFrequencyProp) {
-        frequencyInputDisplay.textContent = "Every " + items[extFrequencyProp] + " min";
-    } else {
-        frequencyInputDisplay.textContent = "Every " + items[extFrequencyProp] + " mins";
+    frequencyInputDisplay.textContent = "Every " + items[extFrequencyProp] + " min";
+    if (items[extFrequencyProp] > 1) {
+        frequencyInputDisplay.textContent += "s"
     }
     frequencyInput.value = items[extFrequencyProp];
-
 
     if (items["EXTENSION_SETTING_ENABLED_" + chrome.runtime.id]) {
         disableBtn.className = "";
         enableBtn.className = "hide";
     } else {
+        frequencyInputDisplay.className = "grey-text"
+        frequencyInput.disabled = true;
         disableBtn.className = "hide";
         enableBtn.className = "";
     }
@@ -57,31 +57,24 @@ chrome.storage.local.get(null, (items) => {
     });
 
     enableBtn.addEventListener("click", function () {
+        frequencyInputDisplay.className = ""
+        frequencyInput.disabled = false;
         let extSettingEnabledProp = "EXTENSION_SETTING_ENABLED_" + chrome.runtime.id;
-        let extSettingFrequencyProp = "EXTENSION_SETTING_FREQUENCY_" + chrome.runtime.id;
         let propObject = {
             [extSettingEnabledProp]: true,
-            [extSettingFrequencyProp]: frequencyInput.value
         };
-        chrome.tabs.query({}, function (tabs) {
-            for (let i = 0; i < tabs.length; i++) {
-                if (!tabs[i].url.startsWith("http") || !tabs[i].url.startsWith("https")) {
-                    continue;
-                }
-                chrome.tabs.sendMessage(tabs[i].id, propObject);
-            }
-        });
-
-        chrome.storage.local.set(propObject);
+        chrome.runtime.sendMessage({message: "enablePopup", propObject});
         setEnableDisableBtn("enable");
     });
 
     disableBtn.addEventListener("click", function () {
-        let extSettingProp = "EXTENSION_SETTING_ENABLED_" + chrome.runtime.id;
+        frequencyInputDisplay.className = "grey-text"
+        frequencyInput.disabled = true;
+        let extSettingEnabledProp = "EXTENSION_SETTING_ENABLED_" + chrome.runtime.id;
         let propObject = {
-            [extSettingProp]: false
+            [extSettingEnabledProp]: false,
         };
-        chrome.storage.local.set(propObject);
+        chrome.runtime.sendMessage({message: "disablePopup", propObject});
         setEnableDisableBtn("disable");
     });
 
@@ -95,7 +88,7 @@ chrome.storage.local.get(null, (items) => {
         } else {
             frequencyInputDisplay.textContent = "Every " + e.target.value + " mins";
         }
-        chrome.storage.local.set(propObject);
+        chrome.runtime.sendMessage({message: "changeFrequency", propObject});
     });
 
     function setEnableDisableBtn(status) {

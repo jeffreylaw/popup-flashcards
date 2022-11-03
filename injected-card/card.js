@@ -1,11 +1,10 @@
 console.log("Injecting content script: card.js")
 
-
 if (!window.INJECTED_FLAG) {
     chrome.runtime.onMessage.addListener(
         function (request, sender, sendResponse) {
+            console.log(`Content script receiving message on: ${new Date().toLocaleString()}`);
             console.log(request);
-            console.log(new Date().toLocaleString());
             if (request.message === "popup" && request.cards && cardDiv.className !== "") {
                 let randomQnA = getRandomQuestionAndAnswer(request.cards)
                 questionContainer.textContent = randomQnA[0];
@@ -14,8 +13,6 @@ if (!window.INJECTED_FLAG) {
             }
         }
     );
-
-    window.INJECTED_FLAG = true;
 
     let cardDiv = document.createElement("div");
     cardDiv.id = ("card-div");
@@ -45,6 +42,7 @@ if (!window.INJECTED_FLAG) {
         cardDiv.className = "hide";
     });
 
+    window.INJECTED_FLAG = true;
 
     function setCardOrientation(orientation) {
         if (orientation === "front") {

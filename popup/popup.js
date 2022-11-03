@@ -1,6 +1,6 @@
 chrome.storage.local.get(null, (items) => {
     let cards = Object.keys(items)
-        .filter(prop => prop !== "EXTENSION_SETTING_ENABLED_" + chrome.runtime.id)
+        .filter(prop => !prop.startsWith("EXTENSION_SETTING") && !prop.endsWith(chrome.runtime.id))
         .reduce((obj, key) => {
             return Object.assign(obj, {
                 [key]: items[key]
@@ -81,14 +81,6 @@ chrome.storage.local.get(null, (items) => {
         let propObject = {
             [extSettingProp]: false
         };
-        chrome.tabs.query({}, function (tabs) {
-            for (let i = 0; i < tabs.length; i++) {
-                if (!tabs[i].url.startsWith("http") || !tabs[i].url.startsWith("https")) {
-                    continue;
-                }
-                chrome.tabs.sendMessage(tabs[i].id, propObject);
-            }
-        });
         chrome.storage.local.set(propObject);
         setEnableDisableBtn("disable");
     });

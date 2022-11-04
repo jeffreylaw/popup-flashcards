@@ -38,6 +38,9 @@ chrome.storage.local.get(null, (items) => {
     showNewCard(cards);
 
     cardDiv.addEventListener("click", function () {
+        if (Object.keys(cards).length === 0) {
+            return;
+        }
         let cardDivInner = document.getElementById("card-div-inner");
         cardDivInner.classList.toggle("is-flipped");
     });

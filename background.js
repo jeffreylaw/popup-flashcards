@@ -29,16 +29,18 @@ chrome.alarms.onAlarm.addListener((alarm) => {
         console.log(`Popup alarm triggered on: ${new Date().toLocaleString()}`);
         chrome.storage.local.get(null, function (items) {
             let extSettingEnabled = "EXTENSION_SETTING_ENABLED_" + chrome.runtime.id;
-            let cards = Object.keys(items)
+            if (items[extSettingEnabled]) {
+                let cards = Object.keys(items)
                 .filter(prop => !prop.startsWith("EXTENSION_SETTING") && !prop.endsWith(chrome.runtime.id))
                 .reduce((obj, key) => {
                     return Object.assign(obj, {
                         [key]: items[key]
                     });
                 }, {});
-            if (items[extSettingEnabled]) {
                 chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
-                    chrome.tabs.sendMessage(tabs[0].id, { message: "popup", cards: cards });
+                    if (tabs[0].url.startsWith("http") || tabs[0].url.startsWith("https")) {
+                        chrome.tabs.sendMessage(tabs[0].id, { message: "popup", cards: cards });
+                    }
                 });
             }
         });

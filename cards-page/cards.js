@@ -13,9 +13,8 @@ chrome.storage.local.get(null, (items) => {
     }
 
     let addCardBtn = document.getElementById("add-card-btn");
-    let newCardDiv = document.getElementById("new-card-div");
-    let toggleNewCardsBtn = document.getElementById("toggle-new-cards-btn");
-    let saveCardsBtn = document.getElementById("save-cards-btn");
+    let exportCardsBtn = document.getElementById("export-cards-btn");
+    let importCardsBtn = document.getElementById("import-cards-btn");
     let importCards = document.getElementById("import-cards");
 
     addCardBtn.addEventListener("click", function () {
@@ -46,15 +45,7 @@ chrome.storage.local.get(null, (items) => {
         })
     })
 
-    toggleNewCardsBtn.addEventListener("click", function () {
-        if (newCardDiv.className === "hide") {
-            newCardDiv.className = "";
-        } else {
-            newCardDiv.className = "hide";
-        }
-    });
-
-    saveCardsBtn.addEventListener("click", function () {
+    exportCardsBtn.addEventListener("click", function () {
         console.log(`Downloading ${Object.keys(cards).length} cards`);
         console.log(cards);
         if (Object.keys(cards).length === 0) {
@@ -92,24 +83,36 @@ chrome.storage.local.get(null, (items) => {
         link.click();
     });
 
+    importCardsBtn.addEventListener("click", function() {
+        importCards.click();
+    });
+
     importCards.addEventListener("change", (event) => {
         let file = event.target.files[0];
         let reader = new FileReader();
         reader.readAsText(file, "UTF-8");
         reader.onload = function (event) {
             let contents = event.target.result;
+            let numOfAddedCards = 0;
             contents = contents.trim()
             contents = contents.split("\n");
             for (let i = 0; i < contents.length; i++) {
                 let question = contents[i].split(",")[0];
                 let answer = contents[i].split(",")[1];
-                cards[question] = answer;
-                addCardToDOM(question, answer);
-                chrome.storage.local.set({ [question]: answer }, function () {
-                    console.log(`Added ${question}: ${answer}`);
-                })
+                if (!(question in cards)) {
+                    numOfAddedCards += 1;
+                    cards[question] = answer;
+                    addCardToDOM(question, answer);
+                    chrome.storage.local.set({ [question]: answer }, function () {
+                        console.log(`Added ${question}: ${answer} to storage`);
+                    })
+                }
             }
+            setTimeout(() => {
+                alert(`Imported ${numOfAddedCards} cards`);
+            }, 100)
         }
+        event.target.value = "";
     })
 
 
@@ -117,11 +120,12 @@ chrome.storage.local.get(null, (items) => {
         let cardsDiv = document.getElementById("cards-div");
 
         let cardParagraphElement = document.createElement("p");
-        let text = document.createTextNode(`Q: ${question} A: ${answer}`);
         let deleteBtn = document.createElement("button");
         deleteBtn.appendChild(document.createTextNode("Delete"))
-
-        cardParagraphElement.appendChild(text);
+        cardParagraphElement.appendChild(document.createTextNode(`Q: ${question}`));
+        cardParagraphElement.appendChild(document.createElement("br"));
+        cardParagraphElement.appendChild(document.createTextNode(`A: ${answer} `));
+        cardParagraphElement.appendChild(document.createElement("br"));
         cardParagraphElement.appendChild(deleteBtn);
         cardsDiv.appendChild(cardParagraphElement);
 

@@ -6,6 +6,11 @@
     "action": {
         "default_popup": "./popup/popup.html"
     },
+    "icons": {
+        "16": "images/icons/16icon.png",
+        "48": "images/icons/48icon.png",
+        "128": "images/icons/128icon.png"
+    },
     "permissions": [
         "storage",
         "tabs",
@@ -28,5 +33,4 @@
             "css": ["injected-card/card.css"]
         }
     ]
-
 }

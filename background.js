@@ -38,7 +38,7 @@ chrome.alarms.onAlarm.addListener((alarm) => {
                     });
                 }, {});
                 chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
-                    if (tabs[0].url.startsWith("http") || tabs[0].url.startsWith("https")) {
+                    if (tabs && tabs[0] && (tabs[0].url.startsWith("http") || tabs[0].url.startsWith("https"))) {
                         chrome.tabs.sendMessage(tabs[0].id, { message: "popup", cards: cards });
                     }
                 });

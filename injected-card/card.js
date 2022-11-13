@@ -7,8 +7,8 @@ if (!window.INJECTED_FLAG) {
             console.log(request);
             if (request.message === "popup" && request.cards && cardDiv.className !== "") {
                 let randomQnA = getRandomQuestionAndAnswer(request.cards)
-                questionContainer.textContent = randomQnA[0];
-                answerContainer.textContent = randomQnA[1]
+                questionContainer.textContent = "Q: " + randomQnA[0];
+                answerContainer.textContent = "A: " + randomQnA[1]
                 showCardDiv();
             }
         }

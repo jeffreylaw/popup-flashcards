@@ -20,7 +20,7 @@ p {
   font-weight: 700;
 }
 
-#card-div { 
+#card-div {
   height: 100%;
   width: 100%;
   cursor: pointer;
@@ -39,7 +39,8 @@ p {
   transform: rotateY(180deg);
 }
 
-#question-container, #answer-container {
+#question-container,
+#answer-container {
   font-size: 1.5em;
   position: absolute;
   backface-visibility: hidden;
@@ -56,6 +57,21 @@ p {
   transform: rotateY(180deg);
 }
 
+#info-container {
+  height: 100%;
+  width: 100%;
+  overflow: auto;
+  z-index: 1;
+  position: absolute;
+  background-color: #fafafa;
+  font-size: 1.5em;
+  cursor: default;
+}
+
+#info-container:hover {
+  cursor: default;
+}
+
 #button-section {
   height: 20%;
   display: flex;
@@ -69,7 +85,7 @@ p {
   align-items: center;
   font-size: 1.2em;
   background-color: #11A683;
-  color:#fdfdfd;
+  color: #fdfdfd;
   flex: 1;
 }
 
@@ -79,6 +95,15 @@ p {
 }
 
 #button-section #enable-btn {
+  background-color: grey;
+}
+
+#next-btn.disabled-btn {
+  background-color: grey;
+}
+
+#next-btn.disabled-btn:hover {
+  cursor: default;
   background-color: grey;
 }
 

@@ -16,6 +16,7 @@ chrome.storage.local.get(null, (items) => {
     let answerContainer = document.getElementById("answer-container");
     let frequencyInput = document.getElementById("frequency-slider-input")
     let frequencyInputDisplay = document.getElementById("frequency-value-display");
+    let infoContainer = document.getElementById("info-container");
     let helpBtn = document.getElementById("help-btn");
     let extFrequencyProp = "EXTENSION_SETTING_FREQUENCY_" + chrome.runtime.id;
 
@@ -35,8 +36,17 @@ chrome.storage.local.get(null, (items) => {
         enableBtn.className = "";
     }
 
-    showNewCard(cards);
+    
+    if (Object.keys(cards).length > 0) {
+        showNewCard(cards);
+    } else {
+        showNoCards();
+    } 
 
+    if (Object.keys(cards).length <= 1) {
+        nextBtn.className = "disabled-btn";
+    }
+    
     cardDiv.addEventListener("click", function () {
         if (Object.keys(cards).length === 0) {
             return;
@@ -50,7 +60,9 @@ chrome.storage.local.get(null, (items) => {
         if (cardDivInner.className === "is-flipped") {
             cardDivInner.classList.toggle("is-flipped");
         }
-        showNewCard();
+        if (Object.keys(cards).length > 1) {
+            showNewCard();
+        }
     });
 
     myCards.addEventListener("click", function () {
@@ -102,6 +114,10 @@ chrome.storage.local.get(null, (items) => {
             enableBtn.className = "";
             disableBtn.className = "hide";
         }
+    }
+
+    function showNoCards() {
+        infoContainer.className = "";
     }
 
     function showNewCard() {

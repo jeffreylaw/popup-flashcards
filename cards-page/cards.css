@@ -1,0 +1,22 @@
+#new-card-div {
+    /* display: none; */
+}
+
+#cards-div {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+#cards-div p {
+    padding: 20px;
+    border: 2px solid rgb(71, 71, 71);
+}
+
+#card-form label, input {
+    display: block;
+}
+
+.hide {
+    display: none;
+}

@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Cards</title>
+    <script src="cards.js" defer></script>
+
+    <link rel="stylesheet" href="cards.css">
+</head>
+<body>
+    
+    <div id="new-card-div">
+        <form id="card-form">
+            <label for="question">Question</label>
+            <input type="text" id="question" name="question">
+            <label for="answer">Answer</label>
+            <input type="text" id="answer" name="answer">
+            <button type="button" id="add-card-btn">Add new card</button>
+        </form>
+    </div>
+    <div>
+        <br>
+        <button type="button" id="import-cards-btn">Import cards</button>
+        <button type="button" id="export-cards-btn">Export cards</button>
+        <input type="file" id="import-cards" accept=".csv, .txt" style="display: none">
+    </div>
+
+    <h1>My Cards</h1>
+    <div id="cards-div">
+    </div>
+
+</body>
+</html>

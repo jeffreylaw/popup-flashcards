@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="popup.css" />
+</head>
+
+<body>
+    <div id="card-section">
+        <div id="card-div">
+            <div id="card-div-inner">
+                <p id="info-container" class="hide">
+                    No available cards.
+                </p>
+                <p id="question-container"></p>
+                <p id="answer-container"></p>
+            </div>
+        </div>
+    </div>
+    <div id="button-section">
+        <a id="next-btn" title="Show next card"></a>
+        <a id="cards-btn" title="My cards"></a>
+        <a id="disable-btn" title="Disable spontaneous popups"></a>
+        <a id="enable-btn" title="Enable spontaneous popups"></a>
+    </div>
+    <div id="slider-section">
+        <span id="frequency-slider">
+            <input id="frequency-slider-input" type="range" min="1" max="30">
+            <span id="frequency-value-display"></span>
+        </span>
+        <a id="help-btn"></a>
+    </div>
+    <script src="popup.js"></script>
+</body>
+
+</html>

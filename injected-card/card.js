@@ -40,6 +40,7 @@ if (!window.INJECTED_FLAG) {
 
     closeBtn.addEventListener("click", function () {
         cardDiv.className = "hide";
+        chrome.runtime.sendMessage({message: "changeLastUpdated"});
     });
 
     window.INJECTED_FLAG = true;

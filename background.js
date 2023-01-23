@@ -1,4 +1,4 @@
-console.log("background service worker loaded");
+console.log("LOG: Background service worker loaded");
 chrome.runtime.onMessage.addListener(function (request, sender, sendresponse) {
     console.log(`LOG: Receiving message in background at ${new Date().toLocaleString()}`);
     console.log("Message type: " + request.message);

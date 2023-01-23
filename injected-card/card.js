@@ -1,31 +1,37 @@
 console.log("Injecting content script: card.js")
 
 if (!window.INJECTED_FLAG) {
+    window.INJECTED_FLAG = true;
     chrome.runtime.onMessage.addListener(
         function (request, sender, sendResponse) {
             console.log(`Content script receiving message on: ${new Date().toLocaleString()}`);
-            console.log(request);
             if (request.message === "popup" && request.cards && cardDiv.className !== "") {
                 let randomQnA = getRandomQuestionAndAnswer(request.cards)
-                questionContainer.textContent = "Q: " + randomQnA[0];
-                answerContainer.textContent = "A: " + randomQnA[1]
+                questionContainer.textContent = randomQnA[0];
+                answerContainer.textContent = randomQnA[1]
                 showCardDiv();
             }
         }
     );
 
     let cardDiv = document.createElement("div");
-    cardDiv.id = ("card-div");
-    cardDiv.className = "hide";
+    cardDiv.id = "chrome-ext-pf-card-div";
+    cardDiv.className = "chrome-ext-pf-hide";
 
     let questionContainer = document.createElement("p")
     let answerContainer = document.createElement("p");
 
+    let header = document.createElement("span");
+    header.textContent = "Question:";
+    header.id = "chrome-ext-pf-header";
+
+
     let closeBtn = document.createElement("button");
-    closeBtn.id = "close-btn";
-    closeBtn.textContent = "X"
+    closeBtn.id = "chrome-ext-pf-close-btn";
+    closeBtn.appendChild(document.createTextNode("\u2716"))
 
     document.body.appendChild(cardDiv);
+    cardDiv.appendChild(header);
     cardDiv.appendChild(questionContainer);
     cardDiv.appendChild(answerContainer);
     cardDiv.appendChild(closeBtn);
@@ -39,19 +45,19 @@ if (!window.INJECTED_FLAG) {
     });
 
     closeBtn.addEventListener("click", function () {
-        cardDiv.className = "hide";
+        cardDiv.className = "chrome-ext-pf-hide";
         chrome.runtime.sendMessage({message: "changeLastUpdated"});
     });
-
-    window.INJECTED_FLAG = true;
 
     function setCardOrientation(orientation) {
         if (orientation === "front") {
             questionContainer.className = "";
-            answerContainer.className = "hide";
+            answerContainer.className = "chrome-ext-pf-hide";
+            header.textContent = "Question:";
         } else if (orientation === "back") {
-            questionContainer.className = "hide";
+            questionContainer.className = "chrome-ext-pf-hide";
             answerContainer.className = "";
+            header.textContent = "Answer:";
         }
     }
 

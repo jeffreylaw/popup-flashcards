@@ -1,32 +1,55 @@
-#card-div {
+#chrome-ext-pf-card-div {
     top: 50%;
     position: fixed;
     left: 50%;
     transform: translate(-50%, -50%);
     z-index: 99999;
-    background-color: #fdfdfd !important;
+    background-color: #6495ED !important;
     text-align: center;
     cursor: pointer;
-    box-shadow: 1px 3px 5px rgba(0, 0, 0, 0.4)
+    box-shadow: 1px 3px 5px rgba(0, 0, 0, 0.4);
+    min-width: 40%;
 }
 
-#card-div p {
-    padding: 100px 200px;
-    background-color: #fdfdfd !important;
-    color: #0E101A !important;
+#chrome-ext-pf-card-div p {
+    padding: 75px 25px;
+    color: #FFF8DC !important;
+    font-size: 16px;
+    font-weight: 400;
     overflow: auto;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
 }
 
-#close-btn {
+#chrome-ext-pf-close-btn {
+    background-color: #6495ED !important;
     position: absolute;
     top: 0;
     right: 0;
+    padding: 5px 10px;
+    cursor: pointer;
+    color: #FFF8DC !important;
+    border-color: #437be3;
 }
 
-.show {
+#chrome-ext-pf-close-btn:hover {
+    background-color: #437be3 !important;
+}
+
+#chrome-ext-pf-header {
+    position: absolute;
+    top: 0;
+    left: 0;
+    font-weight: bold;
+    font-size: 18px;
+    color: #FFF8DC !important;
+}
+
+.chrome-ext-pf-show {
     display: block;
 }
 
-.hide {
+.chrome-ext-pf-hide {
     display: none;
 }

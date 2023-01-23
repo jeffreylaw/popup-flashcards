@@ -1,6 +1,6 @@
 {
     "manifest_version": 3,
-    "name": "Spontaneous Flashcards",
+    "name": "Popup Flashcards",
     "description": "Flashcards out of the blue",
     "version": "1.0",
     "action": {

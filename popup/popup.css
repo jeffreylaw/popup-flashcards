@@ -32,7 +32,7 @@ p {
   height: 100%;
   position: relative;
   transform-style: preserve-3d;
-  transition: all 0.5s;
+  transition: all 0.3s;
 }
 
 #card-div-inner.is-flipped {

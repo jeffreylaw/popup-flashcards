@@ -1,5 +1,5 @@
-# spontaneous-flashcards
-A Chrome extension that spontaneously displays flashcards while you surf the Internet.
+# popup-flashcards
+A Chrome extension that pops up flashcards on an interval basis while you surf the Internet.
 
 
 ### Credits

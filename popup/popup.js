@@ -20,7 +20,7 @@ chrome.storage.local.get(null, (items) => {
     let helpBtn = document.getElementById("help-btn");
     let extFrequencyProp = "EXTENSION_SETTING_FREQUENCY_" + chrome.runtime.id;
 
-    frequencyInputDisplay.textContent = "Every " + items[extFrequencyProp] + " min";
+    frequencyInputDisplay.textContent = "Pop up every " + items[extFrequencyProp] + " min";
     if (items[extFrequencyProp] > 1) {
         frequencyInputDisplay.textContent += "s"
     }
@@ -103,9 +103,9 @@ chrome.storage.local.get(null, (items) => {
 
     frequencyInput.addEventListener("mousemove", function(e) {
         if (e.target.value === "1") {
-            frequencyInputDisplay.textContent = "Every " + e.target.value + " min";
+            frequencyInputDisplay.textContent = "Pop up every " + e.target.value + " min";
         } else {
-            frequencyInputDisplay.textContent = "Every " + e.target.value + " mins";
+            frequencyInputDisplay.textContent = "Pop up every " + e.target.value + " mins";
         }
     });
 

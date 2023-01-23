@@ -28,14 +28,6 @@ chrome.storage.local.get(null, (items) => {
             return;
         }
 
-        for (const question in cards) {
-            if (question.toLowerCase() === questionValue.toLowerCase()) {
-                console.log(`Question "${question}" already exists`);
-                alert("Question already exists");
-                return;
-            }
-        }
-
         chrome.storage.local.set({ [questionValue]: answerValue }, function () {
             console.log(`Added ${questionValue}: ${answerValue}`);
             cards[questionValue] = answerValue;
@@ -110,8 +102,8 @@ chrome.storage.local.get(null, (items) => {
                 let question, answer = "";
                 if (!line.startsWith("\"")) {
                     question = line.split(",")[0];
-                    answer = line.split(",").slice(1);
-
+                    answer = line.split(",").slice(1).join();
+                    console.log(answer);
                     if (answer.startsWith("\"") && answer.endsWith("\"") && answer.contains(",")) {
                         answer = answer.slice(1,answer.length-1);
                     }
@@ -121,17 +113,15 @@ chrome.storage.local.get(null, (items) => {
                 } else {
                     line = line.replace("\"\"", "\"");
                     question = line.split(",")[0];
-                    answer = line.split(",").slice(1);
+                    answer = line.split(",").slice(1).join();
                 }
 
-                if (!(question in cards)) {
-                    numOfAddedCards += 1;
-                    cards[question] = answer;
-                    addCardToDOM(question, answer);
-                    chrome.storage.local.set({ [question]: answer }, function () {
-                        console.log(`Added ${question}: ${answer} to storage`);
-                    })
-                }
+                numOfAddedCards += 1;
+                cards[question] = answer;
+                addCardToDOM(question, answer);
+                chrome.storage.local.set({ [question]: answer }, function () {
+                    console.log(`Added ${question}: ${answer} to storage`);
+                })
             }
             setTimeout(() => {
                 alert(`Imported ${numOfAddedCards} cards`);

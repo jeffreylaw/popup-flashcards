@@ -122,6 +122,7 @@ chrome.storage.local.get(null, (items) => {
         let cardParagraphElement = document.createElement("p");
         let deleteBtn = document.createElement("button");
         deleteBtn.appendChild(document.createTextNode("Delete"))
+        cardParagraphElement.classList.add("card-element");
         cardParagraphElement.appendChild(document.createTextNode(`Q: ${question}`));
         cardParagraphElement.appendChild(document.createElement("br"));
         cardParagraphElement.appendChild(document.createTextNode(`A: ${answer} `));

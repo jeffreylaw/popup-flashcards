@@ -98,12 +98,15 @@ chrome.storage.local.get(null, (items) => {
         let propObject = {
             [extSettingProp]: parseInt(e.target.value)
         };
+        chrome.runtime.sendMessage({message: "changeFrequency", propObject});
+    });
+
+    frequencyInput.addEventListener("mousemove", function(e) {
         if (e.target.value === "1") {
             frequencyInputDisplay.textContent = "Every " + e.target.value + " min";
         } else {
             frequencyInputDisplay.textContent = "Every " + e.target.value + " mins";
         }
-        chrome.runtime.sendMessage({message: "changeFrequency", propObject});
     });
 
     function setEnableDisableBtn(status) {

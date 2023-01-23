@@ -11,13 +11,16 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendresponse) {
             break;
         case "changeFrequency":
             let extSettingFrequencyProp = "EXTENSION_SETTING_FREQUENCY_" + chrome.runtime.id;
+            console.log("LOG: Changed frequency to " + request.propObject[extSettingFrequencyProp] + " minutes");
             chrome.alarms.create("popupAlarm", { periodInMinutes: request.propObject[extSettingFrequencyProp] });
             chrome.storage.local.set(request.propObject);
             break;
         case "changeLastUpdated":
             chrome.storage.local.get(null, function (items) {
                 let extLastUpdatedProp = "EXTENSION_PROP_LAST_UPDATED_" + chrome.runtime.id;
-                let timeInMinutes = Math.round(Date.now() / 1000 / 60);
+                let time = Date.now();
+                let timeInMinutes = Math.round(time / 1000 / 60);
+                console.log("LOG: Last updated " + time.toLocaleString())
                 let propObject = {
                     [extLastUpdatedProp]: timeInMinutes,
                 };
@@ -38,7 +41,7 @@ chrome.runtime.onInstalled.addListener(() => {
 
 chrome.alarms.onAlarm.addListener((alarm) => {
     if (alarm.name === "popupAlarm") {
-        console.log(`Popup alarm triggered on: ${new Date().toLocaleString()}`);
+        console.log(`LOG: Popup alarm triggered on: ${new Date().toLocaleString()}`);
         chrome.storage.local.get(null, function (items) {
             let extSettingEnabledProp = "EXTENSION_SETTING_ENABLED_" + chrome.runtime.id;
             let extSettingFrequencyProp = "EXTENSION_SETTING_FREQUENCY_" + chrome.runtime.id;
@@ -58,6 +61,7 @@ chrome.alarms.onAlarm.addListener((alarm) => {
                     }, {});
                 chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
                     if (tabs && tabs[0] && (tabs[0].url.startsWith("http") || tabs[0].url.startsWith("https"))) {
+                        console.log(`LOG: Sending message: popup to tab at ${new Date().toLocaleString()}`)
                         chrome.tabs.sendMessage(tabs[0].id, { message: "popup", cards: cards });
                     }
                 });

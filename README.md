@@ -1,6 +1,44 @@
 # popup-flashcards
-A Chrome extension that pops up flashcards on an interval basis while you surf the Internet.
+A Chrome extension that pops up flashcards on custom interval basis while you surf the Internet.
 
+## Installion
+1. `git clone https://github.com/jeffreylaw/popup-flashcards.git`
+2. Go to chrome://extensions/ on your Chrome browser.
+3. Turn on Developer mode (top right).
+4. Click Load unpacked and select the Limiter folder.
+
+## How to Use
+
+### Adding, Deleting, Importing, and Exporting Cards
+1. Click the popup-flashcards extension icon.
+2. Click `My Cards` to manage your flashcards. 
+
+### Importing
+- Import from a exported csv file or create a new csv file using the format: question,answer
+
+### Exporting
+- Exports cards to a csv file saved to the location of your choice.
+
+### Viewing flashcards via extension popup
+1. Click the popup-flashcards extension icon.
+2. A random flashcard is displayed.
+3. Click on the flashcard to view the answer.
+4. Click the `Next Card` button to vew the next card.
+
+### Viewing flashcards via browser popup
+1. Click the popup-flashcards extension icon.
+2. Click the `Enable Popups` button.
+3. Adjust the frequency for cards to popup. 
+
+**Note:**
+- The frequency countdown restarts when you close a flashcard.
+- If a card is already showing on a page, no action will be taken.
+
+## Known Bugs
+None
+
+## Versions
+1.0.0 - Initial release
 
 ### Credits
 Book Icon by MD Badsha Meah https://freeicons.io/profile/3335<br>

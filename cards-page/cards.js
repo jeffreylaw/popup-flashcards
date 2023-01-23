@@ -16,6 +16,7 @@ chrome.storage.local.get(null, (items) => {
     let exportCardsBtn = document.getElementById("export-cards-btn");
     let importCardsBtn = document.getElementById("import-cards-btn");
     let importCards = document.getElementById("import-cards");
+    let deleteCardsBtn = document.getElementById("delete-all-cards-btn");
 
     addCardBtn.addEventListener("click", function () {
         let questionElement = document.getElementById("question");
@@ -129,6 +130,19 @@ chrome.storage.local.get(null, (items) => {
         }
         event.target.value = "";
     })
+
+    deleteCardsBtn.addEventListener("click", function() {
+        if (confirm("Are you sure you want to delete all cards?")) {
+            console.log("LOG: Deleting all cards");
+            for (question in cards) {
+                console.log(`Question: "${question}" removed`);
+                delete cards[question];
+                chrome.storage.local.remove(question);
+            }
+            let cardsDiv = document.getElementById("cards-div");
+            cardsDiv.replaceChildren("");
+        }
+    });
 
     function cleanCSVFile(contents) {
         contents = contents.trim()

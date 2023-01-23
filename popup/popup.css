@@ -83,14 +83,14 @@ p {
   justify-content: center;
   align-items: center;
   font-size: 1.2em;
-  background-color: #11A683;
+  background-color: #3a76e6;
   color: #fdfdfd;
   flex: 1;
 }
 
 #button-section a:hover {
   cursor: pointer;
-  background-color: #13b690;
+  background-color: #6495ED;
 }
 
 #button-section #enable-btn {

@@ -78,7 +78,7 @@ chrome.storage.local.get(null, (items) => {
             textFile = window.URL.createObjectURL(data);
             return textFile;
         }
-        link.setAttribute("download", "cards.txt");
+        link.setAttribute("download", "cards.csv");
         link.href = makeTextFile(csvContent);
         link.click();
     });

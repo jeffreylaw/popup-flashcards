@@ -55,16 +55,24 @@ chrome.storage.local.get(null, (items) => {
         let textFile = null;
         let csvContent = "";
         for (let question in cards) {
+            let answer = cards[question];
+
             let escapedQuestion = question;
-            let escapedAnswer = cards[question];
+            let escapedAnswer = answer;
 
+            if (question.includes("\"")) {
+                escapedQuestion = question.replace("\"", "\"\"");
+            }
             if (question.includes(",")) {
-                escapedQuestion = `"${question}"`
+                escapedQuestion = `"${escapedQuestion}"`
             }
 
-            if (cards[question].includes(",")) {
-                escapedAnswer = `"${cards[question]}"`
+            if (answer.includes("\"")) {
+                escapedAnswer = answer.replace("\"", "\"\"");
             }
+            if (answer.includes(",")) {
+                escapedAnswer = `"${escapedAnswer}"`
+            }  
 
             csvContent += `${escapedQuestion},${escapedAnswer}\n`
         }
@@ -91,14 +99,31 @@ chrome.storage.local.get(null, (items) => {
         let file = event.target.files[0];
         let reader = new FileReader();
         reader.readAsText(file, "UTF-8");
+
         reader.onload = function (event) {
             let contents = event.target.result;
             let numOfAddedCards = 0;
-            contents = contents.trim()
-            contents = contents.split("\n");
+            contents = cleanCSVFile(contents);
+            console.log(contents)
             for (let i = 0; i < contents.length; i++) {
-                let question = contents[i].split(",")[0];
-                let answer = contents[i].split(",")[1];
+                let line = contents[i];
+                let question, answer = "";
+                if (!line.startsWith("\"")) {
+                    question = line.split(",")[0];
+                    answer = line.split(",").slice(1);
+
+                    if (answer.startsWith("\"") && answer.endsWith("\"") && answer.contains(",")) {
+                        answer = answer.slice(1,answer.length-1);
+                    }
+
+                    question = question.replace("\"\"", "\"");
+                    answer = answer.replace("\"\"", "\"");
+                } else {
+                    line = line.replace("\"\"", "\"");
+                    question = line.split(",")[0];
+                    answer = line.split(",").slice(1);
+                }
+
                 if (!(question in cards)) {
                     numOfAddedCards += 1;
                     cards[question] = answer;
@@ -115,6 +140,14 @@ chrome.storage.local.get(null, (items) => {
         event.target.value = "";
     })
 
+    function cleanCSVFile(contents) {
+        contents = contents.trim()
+        contents = contents.split("\n");
+        for (let i = 0; i < contents.length; i++) {
+            contents[i] = contents[i].trim();
+        }
+        return contents;
+    }
 
     function addCardToDOM(question, answer) {
         let cardsDiv = document.getElementById("cards-div");

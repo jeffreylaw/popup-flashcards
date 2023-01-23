@@ -48,8 +48,7 @@ p {
   height: 100%;
   overflow: auto;
   display: flex;
-  justify-content: center;
-  align-items: center;
+  justify-content: safe center;
   background-color: #fafafa;
 }
 

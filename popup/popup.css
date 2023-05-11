@@ -5,7 +5,7 @@ body {
   padding: 0px;
   display: flex;
   flex-direction: column;
-  background: #fdfdfd;
+  background: #385170;
   color: #0E101A;
   font-family: sans-serif;
 }
@@ -49,7 +49,8 @@ p {
   overflow: auto;
   display: flex;
   justify-content: safe center;
-  background-color: #fafafa;
+  background-color: #385170;
+  color: #FFF8DC !important;
 }
 
 #answer-container {
@@ -62,7 +63,8 @@ p {
   overflow: auto;
   z-index: 1;
   position: absolute;
-  background-color: #fafafa;
+  background-color: #385170;
+  color: #FFF8DC !important;
   font-size: 1.5em;
   cursor: default;
 }
@@ -83,14 +85,14 @@ p {
   justify-content: center;
   align-items: center;
   font-size: 1.2em;
-  background-color: #3a76e6;
+  background-color: #87b9ae;
   color: #fdfdfd;
   flex: 1;
 }
 
 #button-section a:hover {
   cursor: pointer;
-  background-color: #6495ED;
+  background-color: #9fd3c7;
 }
 
 #button-section #enable-btn {
@@ -109,7 +111,8 @@ p {
 #slider-section {
   height: 15%;
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
+  align-items: center;
   background-color: #fdfdfd;
 }
 
@@ -126,6 +129,7 @@ p {
   justify-content: center;
   align-items: center;
   flex: 2;
+  accent-color: #385170;
 }
 
 .hide {

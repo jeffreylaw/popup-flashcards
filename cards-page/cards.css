@@ -1,16 +1,45 @@
-#cards-div {
+body {
+    background-color: #f0f0f0;
+}
+
+#main-div {
     display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
+    flex-direction: row;
+    font-size: 1.2em;
+}
+
+#left-container {
+    width: 65%;
+    height: 100%;
+}
+
+#right-container {
+    width: 35%;
+    height: 100%;
 }
 
 #cards-div p {
-    padding: 20px;
-    border-radius: 15px;
+    padding: 5px;
+    border-radius: 8px;
+    width: fit-content;
 }
 
-#card-form label, input {
+#card-form label,
+input {
     display: block;
+}
+
+#right-container button {
+    margin-top: 10px;
+    margin-right: 10px;
+}
+
+#right-container textarea {
+    width: 100%;
+    padding: 8px 12px;
+    margin: 8px 0;
+    box-sizing: border-box;
+    resize: none;
 }
 
 .hide {
@@ -23,5 +52,11 @@
 
 .card-element {
     color: white;
-    background: rgb(0, 92, 179);
+    background: #385170;
+}
+
+.card-element>button {
+    margin-right: 0;
+    margin-left: auto;
+    display: block;
 }

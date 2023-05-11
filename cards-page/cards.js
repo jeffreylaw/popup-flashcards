@@ -17,6 +17,8 @@ chrome.storage.local.get(null, (items) => {
     let importCardsBtn = document.getElementById("import-cards-btn");
     let importCards = document.getElementById("import-cards");
     let deleteCardsBtn = document.getElementById("delete-all-cards-btn");
+    let importCardsAnkiBtn = document.getElementById("import-cards-anki-btn");
+    let importCardsAnki = document.getElementById("import-cards-anki");
 
     addCardBtn.addEventListener("click", function () {
         let questionElement = document.getElementById("question");
@@ -65,7 +67,7 @@ chrome.storage.local.get(null, (items) => {
             }
             if (answer.includes(",")) {
                 escapedAnswer = `"${escapedAnswer}"`
-            }  
+            }
 
             csvContent += `${escapedQuestion},${escapedAnswer}\n`
         }
@@ -84,54 +86,78 @@ chrome.storage.local.get(null, (items) => {
         link.click();
     });
 
-    importCardsBtn.addEventListener("click", function() {
+    importCardsBtn.addEventListener("click", function () {
         importCards.click();
     });
 
-    importCards.addEventListener("change", (event) => {
-        let file = event.target.files[0];
-        let reader = new FileReader();
-        reader.readAsText(file, "UTF-8");
+    importCardsAnkiBtn.addEventListener("click", function () {
+        importCardsAnki.click();
+    });
 
+    importCards.addEventListener("change", (event) => {
+        let reader = new FileReader();
+        reader.readAsText(event.target.files[0], "UTF-8");
         reader.onload = function (event) {
             let contents = event.target.result;
-            let numOfAddedCards = 0;
-            contents = cleanCSVFile(contents);
-            console.log(contents)
-            for (let i = 0; i < contents.length; i++) {
-                let line = contents[i];
-                let question, answer = "";
-                if (!line.startsWith("\"")) {
-                    question = line.split(",")[0];
-                    answer = line.split(",").slice(1).join();
-                    console.log(answer);
-                    if (answer.startsWith("\"") && answer.endsWith("\"") && answer.contains(",")) {
-                        answer = answer.slice(1,answer.length-1);
-                    }
 
-                    question = question.replace("\"\"", "\"");
-                    answer = answer.replace("\"\"", "\"");
+            let listOfCards = csvFileToListOfCards(contents);
+            let updatedCards = 0;
+            for (let i = 0; i < listOfCards.length; i++) {
+
+                if (listOfCards[i].question in cards) {
+                    updateCardInDom(listOfCards[i].question, listOfCards[i].answer);
+                    updatedCards++;
                 } else {
-                    line = line.replace("\"\"", "\"");
-                    question = line.split(",")[0];
-                    answer = line.split(",").slice(1).join();
+                    addCardToDOM(listOfCards[i].question, listOfCards[i].answer);
                 }
 
-                numOfAddedCards += 1;
-                cards[question] = answer;
-                addCardToDOM(question, answer);
-                chrome.storage.local.set({ [question]: answer }, function () {
-                    console.log(`Added ${question}: ${answer} to storage`);
+                cards[listOfCards[i].question] = listOfCards[i].answer;
+                chrome.storage.local.set({
+                    [listOfCards[i].question]: listOfCards[i].answer
+                }, function () {
+                    console.log(`Sent ${listOfCards[i].question}: ${listOfCards[i].answer} to storage`);
                 })
             }
             setTimeout(() => {
-                alert(`Imported ${numOfAddedCards} cards`);
+                alert(`Imported ${listOfCards.length - updatedCards} new cards, updated ${updatedCards}`);
             }, 100)
         }
         event.target.value = "";
-    })
+    });
 
-    deleteCardsBtn.addEventListener("click", function() {
+    importCardsAnki.addEventListener("change", (event) => {
+        let reader = new FileReader();
+        reader.readAsText(event.target.files[0], "UTF-8");
+        reader.onload = function (event) {
+            let contents = event.target.result;
+
+            let listOfCards = ankiFileToListOfCards(contents);
+            let updatedCards = 0;
+            for (let i = 0; i < listOfCards.length; i++) {
+
+                if (listOfCards[i].question in cards) {
+                    updateCardInDom(listOfCards[i].question, listOfCards[i].answer);
+                    updatedCards++;
+                } else {
+                    addCardToDOM(listOfCards[i].question, listOfCards[i].answer);
+                }
+                
+                cards[listOfCards[i].question] = listOfCards[i].answer;
+                chrome.storage.local.set({
+                    [listOfCards[i].question]: listOfCards[i].answer
+                }, function () {
+                    console.log(`Sent ${listOfCards[i].question}: ${listOfCards[i].answer} to storage`);
+                })
+            }
+            setTimeout(() => {
+                alert(`Imported ${listOfCards.length - updatedCards} new cards, updated ${updatedCards}`);
+            }, 100)
+        }
+        event.target.value = "";
+    });
+
+
+    deleteCardsBtn.addEventListener("click", function () {
         if (confirm("Are you sure you want to delete all cards?")) {
             console.log("LOG: Deleting all cards");
             for (question in cards) {
@@ -144,13 +170,51 @@ chrome.storage.local.get(null, (items) => {
         }
     });
 
-    function cleanCSVFile(contents) {
-        contents = contents.trim()
-        contents = contents.split("\n");
+    function ankiFileToListOfCards(contents) {
+        let listOfCards = [];
+        contents = contents.trim().split("\n").splice(2);
+        console.log(contents);
         for (let i = 0; i < contents.length; i++) {
-            contents[i] = contents[i].trim();
+            let line = contents[i].trim();
+            let card = {
+                question: line.split("\t")[0],
+                answer: line.split("\t")[1],
+            }
+            if (card["question"].includes('<img src=""') || card["answer"].includes('<img src=""')) {
+                continue;
+            }
+
+            listOfCards.push(card)
         }
-        return contents;
+        return listOfCards;
+    }
+
+    function csvFileToListOfCards(contents) {
+        let listOfCards = [];
+        contents = contents.trim().split("\n");
+        for (let i = 0; i < contents.length; i++) {
+            let line = contents[i].trim();
+            let card = {
+                question: line.split(",")[0],
+                answer: line.split(",").slice(1).join()
+            }
+
+            if (!line.startsWith("\"")) {
+                if (card["answer"].startsWith("\"") && card["answer"].endsWith("\"") && card["answer"].includes(",")) {
+                    card["answer"] = card["answer"].slice(1, card["answer"].length - 1);
+                }
+
+                card["question"] = card["question"].replace("\"\"", "\"");
+                card["answer"] = card["answer"].replace("\"\"", "\"");
+            } else {
+                line = line.replace("\"\"", "\"");
+                card["question"] = line.split(",")[0];
+                card["answer"] = line.split(",").slice(1).join();
+            }
+
+            listOfCards.push(card);
+        }
+        return listOfCards;
     }
 
     function addCardToDOM(question, answer) {
@@ -174,6 +238,17 @@ chrome.storage.local.get(null, (items) => {
                 delete cards[question];
             });
         });
+    }
+
+    function updateCardInDom(question, answer) {
+        let paragraphElements = document.querySelectorAll(".card-element");
+        for (let i = 0; i < paragraphElements.length; i++) {
+            let existingQuestion = paragraphElements[i].innerHTML.split("<br>A: ")[0].slice(3);
+            if (question == existingQuestion) {
+                paragraphElements[i].remove();
+                addCardToDOM(question, answer);
+            }
+        }
     }
 });
 

@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -9,28 +10,38 @@
 
     <link rel="stylesheet" href="cards.css">
 </head>
+
 <body>
-    
-    <div id="new-card-div">
-        <form id="card-form">
-            <label for="question">Question</label>
-            <input type="text" id="question" name="question">
-            <label for="answer">Answer</label>
-            <input type="text" id="answer" name="answer">
-            <button type="button" id="add-card-btn">Add new card</button>
-        </form>
-    </div>
-    <div>
-        <br>
-        <button type="button" id="import-cards-btn">Import cards</button>
-        <button type="button" id="export-cards-btn">Export cards</button>
-        <button type="button" id="delete-all-cards-btn">Delete all cards</button>
-        <input type="file" id="import-cards" accept=".csv, .txt" style="display: none">
+    <div id="main-div">
+        <div id="left-container">
+            <h1 class="text-center">My Cards</h1>
+            <div id="cards-div">
+            </div>
+        </div>
+
+        <div id="right-container">
+            <h1 class="text-center">Manage Cards</h1>
+            <form id="card-form">
+                <label for="question">Question</label>
+                <textarea id="question" name="question"></textarea>
+                <label for="answer">Answer</label>
+                <textarea id="answer" name="answer"></textarea>
+                <button type="button" id="add-card-btn">Add new card</button>
+            </form>
+            <div>
+                <br>
+                <button type="button" id="import-cards-btn">Import cards</button>
+                <button type="button" id="import-cards-anki-btn">Import cards from Anki</button><br>
+                <button type="button" id="export-cards-btn">Export cards</button><br>
+                <button type="button" id="delete-all-cards-btn">Delete all cards</button>
+
+                <input type="file" id="import-cards" accept=".csv, .txt" style="display: none">
+                <input type="file" id="import-cards-anki" accept=".txt" style="display: none">
+            </div>
+        </div>
     </div>
 
-    <h1 class="text-center">My Cards</h1>
-    <div id="cards-div">
-    </div>
 
 </body>
+
 </html>

@@ -41,7 +41,8 @@ None
 ## Versions
 1.0.0 - Initial release\
 1.1.0 - Changed exported file to be .csv instead of .txt\
-2.0.0 - Updated styles, added Anki card support
+2.0.0 - Updated styles, added Anki card support\
+2.1.0 - Added scrollable section in Cards page to allow user to see existing cards easier when adding new cards, undo last imported/updated set of cards (that is in memory)
 
 ### Credits
 Book Icon by MD Badsha Meah https://freeicons.io/profile/3335<br>

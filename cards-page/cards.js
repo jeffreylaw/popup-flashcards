@@ -8,6 +8,8 @@ chrome.storage.local.get(null, (items) => {
             });
         }, {});
 
+    let recentCards = {};
+
     for (const question in cards) {
         addCardToDOM(question, cards[question]);
     }
@@ -19,6 +21,7 @@ chrome.storage.local.get(null, (items) => {
     let deleteCardsBtn = document.getElementById("delete-all-cards-btn");
     let importCardsAnkiBtn = document.getElementById("import-cards-anki-btn");
     let importCardsAnki = document.getElementById("import-cards-anki");
+    let undoImportBtn = document.getElementById("undo-import-btn");
 
     addCardBtn.addEventListener("click", function () {
         let questionElement = document.getElementById("question");
@@ -102,6 +105,8 @@ chrome.storage.local.get(null, (items) => {
 
             let listOfCards = csvFileToListOfCards(contents);
             let updatedCards = 0;
+            recentCards = {};
+
             for (let i = 0; i < listOfCards.length; i++) {
 
                 if (listOfCards[i].question in cards) {
@@ -117,6 +122,11 @@ chrome.storage.local.get(null, (items) => {
                 }, function () {
                     console.log(`Sent ${listOfCards[i].question}: ${listOfCards[i].answer} to storage`);
                 })
+                recentCards[listOfCards[i].question] = listOfCards[i].answer;
+            }
+            if (Object.keys(recentCards).length > 0) {
+                let undoImportBtn = document.getElementById("undo-import-btn");
+                undoImportBtn.style.display = "block";
             }
             setTimeout(() => {
                 alert(`Imported ${listOfCards.length - updatedCards} new cards, updated ${updatedCards}`);
@@ -133,6 +143,8 @@ chrome.storage.local.get(null, (items) => {
 
             let listOfCards = ankiFileToListOfCards(contents);
             let updatedCards = 0;
+            recentCards = {};
+
             for (let i = 0; i < listOfCards.length; i++) {
 
                 if (listOfCards[i].question in cards) {
@@ -141,13 +153,20 @@ chrome.storage.local.get(null, (items) => {
                 } else {
                     addCardToDOM(listOfCards[i].question, listOfCards[i].answer);
                 }
-                
+
                 cards[listOfCards[i].question] = listOfCards[i].answer;
                 chrome.storage.local.set({
                     [listOfCards[i].question]: listOfCards[i].answer
                 }, function () {
                     console.log(`Sent ${listOfCards[i].question}: ${listOfCards[i].answer} to storage`);
                 })
+                recentCards[listOfCards[i].question] = listOfCards[i].answer;
+            }
+            console.log(Object.keys(recentCards).length)
+            if (Object.keys(recentCards).length > 0) {
+                let undoImportBtn = document.getElementById("undo-import-btn");
+                console.log(undoImportBtn)
+                undoImportBtn.style.display = "block";
             }
             setTimeout(() => {
                 alert(`Imported ${listOfCards.length - updatedCards} new cards, updated ${updatedCards}`);
@@ -156,6 +175,27 @@ chrome.storage.local.get(null, (items) => {
         event.target.value = "";
     });
 
+    undoImportBtn.addEventListener("click", function () {
+        if (confirm("Are you sure you want to undo the last imported/updated set of cards?")) {
+            console.log("LOG: Deleting last imported cards");
+            for (question in recentCards) {
+                console.log(`Question: "${question}" removed`);
+                delete cards[question];
+                chrome.storage.local.remove(question);
+            }
+            let cardsElements = document.querySelectorAll(".card-element");
+            console.log(recentCards)
+            cardsElements.forEach((card) => {
+                let question = card.innerText.split("\nA:")[0].slice(3);
+                if (question in recentCards) {
+                    card.parentElement.removeChild(card);
+                }
+            });
+            recentCards = {};
+            let undoImportBtn = document.getElementById("undo-import-btn");
+            undoImportBtn.style.display = "none";
+        }
+    });
 
     deleteCardsBtn.addEventListener("click", function () {
         if (confirm("Are you sure you want to delete all cards?")) {

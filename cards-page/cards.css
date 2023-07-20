@@ -1,5 +1,6 @@
 body {
     background-color: #fdfdfd;
+    overflow-y: hidden;
 }
 
 #main-div {
@@ -27,6 +28,11 @@ body {
 #card-form label,
 input {
     display: block;
+}
+
+#left-container {
+    overflow-y: scroll;
+    height: 100vh;
 }
 
 #right-container button {

@@ -39,8 +39,8 @@ A Chrome extension that pops up flashcards on custom interval basis while you su
 None
 
 ## Versions
-1.0.0 - Initial release
-1.1.0 - Changed exported file to be .csv instead of .txt
+1.0.0 - Initial release\
+1.1.0 - Changed exported file to be .csv instead of .txt\
 2.0.0 - Updated styles, added Anki card support
 
 ### Credits
